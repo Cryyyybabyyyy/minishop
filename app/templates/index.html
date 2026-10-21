@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}MiniShop — Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-content">
+    <h1>Welcome to MiniShop</h1>
+    <p>Quality tech accessories for students and professionals. Browse our curated catalogue and place your order today.</p>
+    <a href="#catalogue" class="btn btn-primary btn-lg">Shop Now</a>
+  </div>
+</section>
+
+<section id="catalogue" class="catalogue">
+  <h2>Product Catalogue</h2>
+  <div class="product-grid">
+    {% for product in products %}
+    <article class="product-card">
+      <div class="product-image">
+        {% if product.image_filename %}
+          <img src="{{ url_for('main.serve_media', filename=product.image_filename) }}" alt="{{ product.name }}">
+        {% else %}
+          <div class="placeholder-img">
+            <span>{{ product.name[:2]|upper }}</span>
+          </div>
+        {% endif %}
+      </div>
+      <div class="product-info">
+        <h3><a href="{{ url_for('main.product_detail', product_id=product.id) }}">{{ product.name }}</a></h3>
+        <p class="product-desc">{{ product.description[:90] }}{% if product.description|length > 90 %}…{% endif %}</p>
+        <div class="product-meta">
+          <span class="price">£{{ "%.2f"|format(product.price) }}</span>
+          {% if product.stock > 0 %}
+            <span class="stock-ok">In stock</span>
+          {% else %}
+            <span class="stock-out">Out of stock</span>
+          {% endif %}
+        </div>
+        <div class="product-actions">
+          <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="btn btn-sm btn-outline">View</a>
+          {% if session.get('user_id') and session.get('role') == 'customer' and product.stock > 0 %}
+          <form method="post" action="{{ url_for('main.cart_add', product_id=product.id) }}" class="inline-form">
+            <button type="submit" class="btn btn-sm btn-primary">Add to Cart</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+    {% else %}
+    <p>No products available yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

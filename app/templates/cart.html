@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Cart — MiniShop{% endblock %}
+
+{% block content %}
+<section class="cart-section">
+  <h1>Shopping Cart</h1>
+
+  {% if items %}
+  <form method="post" action="{{ url_for('main.cart_update') }}">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>
+              <a href="{{ url_for('main.product_detail', product_id=item.product.id) }}">
+                {{ item.product.name }}
+              </a>
+            </td>
+            <td>£{{ "%.2f"|format(item.product.price) }}</td>
+            <td>
+              <input type="number" name="qty_{{ item.product.id }}"
+                     value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}"
+                     class="qty-input">
+            </td>
+            <td>£{{ "%.2f"|format(item.subtotal) }}</td>
+            <td>
+              <button type="submit" formaction="{{ url_for('main.cart_remove', product_id=item.product.id) }}"
+                      formmethod="post" class="btn btn-sm btn-outline">Remove</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="cart-footer">
+      <p class="cart-total">Total: <strong>£{{ "%.2f"|format(total) }}</strong></p>
+      <button type="submit" class="btn btn-outline">Update Cart</button>
+      {% if session.get('role') == 'customer' %}
+        <a href="{{ url_for('main.checkout') }}" class="btn btn-primary">Proceed to Checkout</a>
+      {% else %}
+        <p class="muted">Only customers can checkout.</p>
+      {% endif %}
+    </div>
+  </form>
+  {% else %}
+  <p class="empty-state">Your cart is empty. <a href="{{ url_for('main.index') }}#catalogue">Browse products</a></p>
+  {% endif %}
+</section>
+{% endblock %}

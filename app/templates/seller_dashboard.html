@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Seller Dashboard — MiniShop{% endblock %}
+
+{% block content %}
+<section class="seller-section">
+  <h1>Seller Dashboard</h1>
+  <p class="section-sub">Manage products and upload images.</p>
+
+  <div class="seller-actions">
+    <a href="{{ url_for('main.seller_upload') }}" class="btn btn-primary">Upload Product Image</a>
+  </div>
+
+  <h2>Products</h2>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.name }}</td>
+          <td>£{{ "%.2f"|format(p.price) }}</td>
+          <td>{{ p.stock }}</td>
+          <td>{{ p.image_filename or '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Uploaded Files</h2>
+  {% if uploaded_files %}
+  <ul class="file-list">
+    {% for f in uploaded_files %}
+    <li>
+      <a href="{{ url_for('main.download_upload', filename=f) }}">{{ f }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty-state">No files uploaded yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

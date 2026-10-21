@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Checkout — MiniShop{% endblock %}
+
+{% block content %}
+<section class="checkout-section">
+  <h1>Checkout</h1>
+  <p class="section-sub">Review your order and confirm purchase.</p>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>£{{ "%.2f"|format(item.product.price) }}</td>
+          <td>£{{ "%.2f"|format(item.subtotal) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="cart-total">Order Total: <strong>£{{ "%.2f"|format(total) }}</strong></p>
+
+  <form method="post" action="{{ url_for('main.checkout') }}">
+    <p class="muted">This is a lab environment — no real payment is taken.</p>
+    <button type="submit" class="btn btn-primary btn-lg">Place Order</button>
+    <a href="{{ url_for('main.cart_view') }}" class="btn btn-outline">Back to Cart</a>
+  </form>
+</section>
+{% endblock %}

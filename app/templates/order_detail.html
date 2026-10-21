@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} — MiniShop{% endblock %}
+
+{% block content %}
+<section class="order-detail-section">
+  <h1>Order #{{ order.id }}</h1>
+  <div class="order-meta">
+    <p><strong>Customer:</strong> {{ order.username }}</p>
+    <p><strong>Status:</strong> <span class="status status-{{ order.status|lower }}">{{ order.status }}</span></p>
+    <p><strong>Date:</strong> {{ order.created_at }}</p>
+    <p><strong>Total:</strong> £{{ "%.2f"|format(order.total) }}</p>
+  </div>
+
+  <h2>Items</h2>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td><a href="{{ url_for('main.product_detail', product_id=item.product_id) }}">{{ item.name }}</a></td>
+          <td>{{ item.quantity }}</td>
+          <td>£{{ "%.2f"|format(item.unit_price) }}</td>
+          <td>£{{ "%.2f"|format(item.quantity * item.unit_price) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <a href="{{ url_for('main.orders') }}" class="btn btn-outline">← Back to My Orders</a>
+</section>
+{% endblock %}

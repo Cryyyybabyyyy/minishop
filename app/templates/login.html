@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Login — MiniShop{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-card">
+    <h1>Sign In</h1>
+    <p class="auth-sub">Use one of the lab synthetic accounts or your registered account.</p>
+
+    <form method="post" action="{{ url_for('main.login') }}" class="auth-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus
+               placeholder="e.g. alice" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required
+               placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+
+    <p class="auth-footer">New customer? <a href="{{ url_for('main.register') }}">Create an account</a></p>
+
+    <div class="lab-accounts">
+      <h3>Lab Accounts</h3>
+      <ul>
+        <li><strong>alice</strong> / alice123 <span class="badge">customer</span></li>
+        <li><strong>bob</strong> / bob123 <span class="badge">customer</span></li>
+        <li><strong>seller</strong> / seller123 <span class="badge badge-seller">seller</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}

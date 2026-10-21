@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}My Orders — MiniShop{% endblock %}
+
+{% block content %}
+<section class="orders-section">
+  <h1>My Orders</h1>
+  <p class="section-sub">Orders belonging to <strong>{{ session.username }}</strong>.</p>
+
+  {% if orders %}
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>#{{ order.id }}</td>
+          <td>{{ order.created_at }}</td>
+          <td><span class="status status-{{ order.status|lower }}">{{ order.status }}</span></td>
+          <td>£{{ "%.2f"|format(order.total) }}</td>
+          <td><a href="{{ url_for('main.order_detail', order_id=order.id) }}" class="btn btn-sm">Details</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty-state">You have no orders yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

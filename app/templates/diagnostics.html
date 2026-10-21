@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Product Diagnostics — MiniShop{% endblock %}
+
+{% block content %}
+<section class="diagnostics-section">
+  <h1>Product Diagnostics</h1>
+  <p class="section-sub">
+    Enter a product support code to run a diagnostic check.
+    <em>(Lab feature — intentionally unsafe.)</em>
+  </p>
+
+  <form method="post" class="diagnostics-form">
+    <div class="form-group">
+      <label for="product_code">Product Code</label>
+      <input type="text" id="product_code" name="product_code"
+             value="{{ product_code }}" placeholder="e.g. PROD-1001" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Run Diagnostics</button>
+  </form>
+
+  {% if output is not none %}
+  <div class="diagnostics-output">
+    <h2>Result</h2>
+    <pre>{{ output }}</pre>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

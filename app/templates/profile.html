@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Profile — MiniShop{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+  <h1>My Profile</h1>
+
+  <div class="profile-card">
+    <div class="profile-avatar">
+      {% if user.profile_image %}
+        <img src="{{ url_for('main.serve_media', filename=user.profile_image) }}" alt="Profile picture">
+      {% else %}
+        <div class="avatar-placeholder">{{ user.username[0]|upper }}</div>
+      {% endif %}
+    </div>
+    <div class="profile-info">
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Role:</strong> {{ user.role }}</p>
+    </div>
+  </div>
+
+  <h2>Upload Profile Picture</h2>
+  <p class="section-sub">Choose an image for your profile. <em>(Lab feature — intentionally unsafe validation.)</em></p>
+
+  <form method="post" action="{{ url_for('main.profile_upload') }}" enctype="multipart/form-data" class="upload-form">
+    <div class="form-group">
+      <label for="file">Choose file</label>
+      <input type="file" id="file" name="file" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form>
+</section>
+{% endblock %}

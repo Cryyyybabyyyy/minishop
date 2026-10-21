@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MiniShop{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="{{ url_for('main.index') }}" class="logo">Mini<span>Shop</span></a>
+      <nav class="main-nav">
+        <a href="{{ url_for('main.index') }}">Home</a>
+        <a href="{{ url_for('main.index') }}#catalogue">Catalogue</a>
+        <a href="{{ url_for('main.cart_view') }}" class="cart-link">
+          Cart{% if cart_count %} <span class="cart-badge">{{ cart_count }}</span>{% endif %}
+        </a>
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('main.orders') }}">My Orders</a>
+          <a href="{{ url_for('main.profile') }}">Profile</a>
+          {% if session.get('role') == 'seller' %}
+            <a href="{{ url_for('main.seller_dashboard') }}">Seller Dashboard</a>
+          {% endif %}
+          <a href="{{ url_for('main.diagnostics') }}">Diagnostics</a>
+          <span class="nav-user">{{ session.username }} ({{ session.role }})</span>
+          <a href="{{ url_for('main.logout') }}" class="btn btn-outline">Logout</a>
+        {% else %}
+          <a href="{{ url_for('main.login') }}" class="btn btn-primary">Login</a>
+          <a href="{{ url_for('main.register') }}" class="btn btn-outline">Register</a>
+        {% endif %}
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu" id="navToggle">☰</button>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 MiniShop — University SSDLC Lab. Intentionally vulnerable. Do not expose to the public internet.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle')?.addEventListener('click', function () {
+      document.querySelector('.main-nav')?.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

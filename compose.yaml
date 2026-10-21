@@ -1,0 +1,50 @@
+# MiniShop lab – Docker Compose
+# Intentionally vulnerable application for authorised SSDLC testing ONLY.
+# Binds to 127.0.0.1 on the host. Do NOT expose to the public internet.
+
+services:
+  minishop:
+    build: .
+    image: minishop:lab
+    container_name: minishop-lab
+    restart: "no"
+    ports:
+      # Host loopback only – never 0.0.0.0
+      - "127.0.0.1:5000:5000"
+    volumes:
+      # Persistent but isolated data
+      - minishop-db:/app/instance
+      - minishop-uploads:/app/app/static/uploads
+    environment:
+      - SECRET_KEY=minishop-lab-secret-do-not-use-in-production
+      - DATABASE_PATH=/app/instance/minishop.db
+      - UPLOAD_FOLDER=/app/app/static/uploads
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Keep only the minimal capabilities needed (none extra)
+    read_only: false   # app needs to write DB + uploads
+    tmpfs:
+      - /tmp:size=64M,mode=1777
+    user: "1000:1000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  minishop-db:
+  minishop-uploads:
